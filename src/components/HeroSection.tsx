@@ -78,19 +78,9 @@ export default function HeroSection() {
                 <p className="text-base font-light text-white/60 md:text-lg max-w-lg pt-2">
                   Воспитатель, исследователь и немного волшебник — каждый день превращаю обычные занятия в увлекательные творческие приключения. Мой девиз: «Играем — познаём, творим — растём, чувствуем красоту — развиваемся!»
                 </p>
-                <div className="flex flex-wrap gap-6 pt-2">
-                  <div className="flex items-center gap-8">
-                    <div className="text-center">
-                      <p className="text-2xl font-semibold text-white">5</p>
-                      <p className="text-xs text-white/60 uppercase tracking-widest">лет опыта</p>
-                    </div>
-                    <div className="h-10 w-px bg-white/20" />
-                    <div className="text-center">
-                      <p className="text-2xl font-semibold text-white">50</p>
-                      <p className="text-xs text-white/60 uppercase tracking-widest">воспитанников</p>
-                    </div>
-
-                  </div>
+                <div className="flex items-center gap-3 pt-1">
+                  <div className="h-px w-8 bg-white/40" />
+                  <p className="text-xs text-white/50 uppercase tracking-widest">5 лет опыта</p>
                 </div>
                 <div className="flex gap-4 pt-2">
                   <a

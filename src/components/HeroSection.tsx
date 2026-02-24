@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const images = [
-  'https://cdn.poehali.dev/templates/creative-portfolio-ru/gallery-2.jpg',
-  'https://cdn.poehali.dev/templates/creative-portfolio-ru/gallery-1.jpg',
-  'https://cdn.poehali.dev/templates/creative-portfolio-ru/gallery-4.jpg',
-  'https://cdn.poehali.dev/templates/creative-portfolio-ru/gallery-5.jpg',
+  '/placeholder.jpg',
+  '/placeholder.jpg',
+  '/placeholder.jpg',
+  '/placeholder.jpg',
 ];
 
 export default function HeroSection() {
@@ -55,8 +55,8 @@ export default function HeroSection() {
             >
               <div className="relative h-48 w-48 overflow-hidden rounded-full border-4 border-white shadow-2xl md:h-64 md:w-64">
                 <img
-                  src="https://cdn.poehali.dev/templates/creative-portfolio-ru/portrait.jpg"
-                  alt="Креативный специалист"
+                  src="/placeholder-user.jpg"
+                  alt="Воспитатель"
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -70,12 +70,42 @@ export default function HeroSection() {
             >
               <div className="space-y-4">
                 <p className="text-3xl font-light text-white md:text-4xl lg:text-5xl">
-                  Алексей Иванов
+                  Ваше имя
                 </p>
                 <p className="text-xl font-light text-white/80 md:text-2xl">
-                  Креативный директор | Дизайнер
+                  Воспитатель | Педагог дошкольного образования
                 </p>
-                <div className="flex gap-6 pt-4">
+                <p className="text-base font-light text-white/60 md:text-lg max-w-lg pt-2">
+                  Создаю тёплую и безопасную среду, где каждый ребёнок раскрывает свой потенциал. Опыт работы — более 10 лет.
+                </p>
+                <div className="flex flex-wrap gap-6 pt-2">
+                  <div className="flex items-center gap-8">
+                    <div className="text-center">
+                      <p className="text-2xl font-semibold text-white">10+</p>
+                      <p className="text-xs text-white/60 uppercase tracking-widest">лет опыта</p>
+                    </div>
+                    <div className="h-10 w-px bg-white/20" />
+                    <div className="text-center">
+                      <p className="text-2xl font-semibold text-white">150+</p>
+                      <p className="text-xs text-white/60 uppercase tracking-widest">воспитанников</p>
+                    </div>
+                    <div className="h-10 w-px bg-white/20" />
+                    <div className="text-center">
+                      <p className="text-2xl font-semibold text-white">5</p>
+                      <p className="text-xs text-white/60 uppercase tracking-widest">наград</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-4 pt-2">
+                  <a
+                    href="#contact"
+                    className="inline-block rounded-full bg-white px-6 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-90"
+                  >
+                    Написать мне
+                  </a>
+                </div>
+
+                <div className="flex gap-6 pt-2">
                   <a
                     href="https://t.me/"
                     target="_blank"

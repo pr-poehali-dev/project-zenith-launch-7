@@ -89,11 +89,7 @@ export default function HeroSection() {
                       <p className="text-2xl font-semibold text-white">50</p>
                       <p className="text-xs text-white/60 uppercase tracking-widest">воспитанников</p>
                     </div>
-                    <div className="h-10 w-px bg-white/20" />
-                    <div className="text-center">
-                      <p className="text-2xl font-semibold text-white">5</p>
-                      <p className="text-xs text-white/60 uppercase tracking-widest">наград</p>
-                    </div>
+
                   </div>
                 </div>
                 <div className="flex gap-4 pt-2">

@@ -81,12 +81,12 @@ export default function HeroSection() {
                 <div className="flex flex-wrap gap-6 pt-2">
                   <div className="flex items-center gap-8">
                     <div className="text-center">
-                      <p className="text-2xl font-semibold text-white">10+</p>
+                      <p className="text-2xl font-semibold text-white">5</p>
                       <p className="text-xs text-white/60 uppercase tracking-widest">лет опыта</p>
                     </div>
                     <div className="h-10 w-px bg-white/20" />
                     <div className="text-center">
-                      <p className="text-2xl font-semibold text-white">150+</p>
+                      <p className="text-2xl font-semibold text-white">50</p>
                       <p className="text-xs text-white/60 uppercase tracking-widest">воспитанников</p>
                     </div>
                     <div className="h-10 w-px bg-white/20" />

@@ -1,0 +1,31 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "GET profile",
+      "method": "POST",
+      "path": "/",
+      "body": {"resource": "profile", "action": "get"},
+      "expectedStatus": 200
+    },
+    {
+      "name": "GET achievements",
+      "method": "POST",
+      "path": "/",
+      "body": {"resource": "achievements", "action": "get"},
+      "expectedStatus": 200
+    },
+    {
+      "name": "GET gallery",
+      "method": "POST",
+      "path": "/",
+      "body": {"resource": "gallery", "action": "get"},
+      "expectedStatus": 200
+    }
+  ]
+}

@@ -1,42 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { apiGet } from '@/lib/api';
 
 const tabs = ['Анкетные данные', 'Повышение квалификации'];
 
-const profileData = [
-  { label: 'ФИО', value: 'Олзоева Елена Борисовна' },
-  { label: 'Должность', value: 'Воспитатель' },
-  { label: 'Место работы', value: 'Указать учреждение' },
-  { label: 'Образование', value: 'Указать образование' },
-  { label: 'Специальность по диплому', value: 'Указать специальность' },
-  { label: 'Стаж педагогической работы', value: '5 лет' },
-  { label: 'Квалификационная категория', value: 'Указать категорию' },
-  { label: 'Дата последней аттестации', value: 'Указать дату' },
-];
-
-const qualifications = [
-  {
-    year: '2024',
-    title: 'Название курса или программы',
-    org: 'Название организации',
-    hours: '72 часа',
-  },
-  {
-    year: '2023',
-    title: 'Название курса или программы',
-    org: 'Название организации',
-    hours: '36 часов',
-  },
-  {
-    year: '2022',
-    title: 'Название курса или программы',
-    org: 'Название организации',
-    hours: '108 часов',
-  },
-];
-
 export default function PortfolioSection() {
   const [activeTab, setActiveTab] = useState(0);
+  const [profileData, setProfileData] = useState<Record<string, string>[]>([]);
+  const [qualifications, setQualifications] = useState<Record<string, string>[]>([]);
+
+  useEffect(() => {
+    apiGet('portfolio_profile').then(setProfileData);
+    apiGet('qualifications').then(setQualifications);
+  }, []);
 
   return (
     <section className="bg-gray-50 py-24 px-8 md:px-16">
@@ -54,9 +30,7 @@ export default function PortfolioSection() {
               onClick={() => setActiveTab(index)}
               className={cn(
                 'px-6 py-3 text-sm font-medium transition-colors border-b-2 -mb-px',
-                activeTab === index
-                  ? 'border-black text-black'
-                  : 'border-transparent text-gray-400 hover:text-gray-700'
+                activeTab === index ? 'border-black text-black' : 'border-transparent text-gray-400 hover:text-gray-700'
               )}
             >
               {tab}
@@ -68,11 +42,8 @@ export default function PortfolioSection() {
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             {profileData.map((item, index) => (
               <div
-                key={item.label}
-                className={cn(
-                  'flex flex-col sm:flex-row sm:items-center gap-2 px-8 py-5',
-                  index !== profileData.length - 1 && 'border-b border-gray-100'
-                )}
+                key={item.id}
+                className={cn('flex flex-col sm:flex-row sm:items-center gap-2 px-8 py-5', index !== profileData.length - 1 && 'border-b border-gray-100')}
               >
                 <p className="text-xs uppercase tracking-widest text-gray-400 sm:w-64 shrink-0">{item.label}</p>
                 <p className="text-gray-900">{item.value}</p>
@@ -83,8 +54,8 @@ export default function PortfolioSection() {
 
         {activeTab === 1 && (
           <div className="flex flex-col gap-6">
-            {qualifications.map((item, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-sm px-8 py-6 flex flex-col sm:flex-row sm:items-center gap-4">
+            {qualifications.map((item) => (
+              <div key={item.id} className="bg-white rounded-2xl shadow-sm px-8 py-6 flex flex-col sm:flex-row sm:items-center gap-4">
                 <div className="shrink-0 w-16 h-16 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
                   {item.year}
                 </div>

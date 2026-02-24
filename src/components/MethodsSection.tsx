@@ -1,8 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import Icon from '@/components/ui/icon';
-
-const UPLOAD_URL = 'https://functions.poehali.dev/b2489f59-4d00-4724-9a89-0168ecb48d3c';
+import { apiGet, apiCreate, apiDelete, uploadFile } from '@/lib/api';
 
 const tabs = [
   { id: 'programs', label: 'Программы и планирование' },
@@ -10,14 +9,6 @@ const tabs = [
   { id: 'parents', label: 'Взаимодействие с родителями' },
   { id: 'consultations', label: 'Консультации для родителей' },
 ];
-
-type FileItem = {
-  name: string;
-  url: string;
-  size: string;
-};
-
-type FilesState = Record<string, FileItem[]>;
 
 function fileIcon(name: string) {
   const ext = name.split('.').pop()?.toLowerCase();
@@ -35,46 +26,32 @@ function formatSize(bytes: number) {
 
 export default function MethodsSection() {
   const [activeTab, setActiveTab] = useState('programs');
-  const [files, setFiles] = useState<FilesState>({ programs: [], presentations: [], parents: [], consultations: [] });
+  const [files, setFiles] = useState<Record<string, string>[]>([]);
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    apiGet('methods_files').then(setFiles);
+  }, []);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const b64 = (reader.result as string).split(',')[1];
-        const res = await fetch(UPLOAD_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            file: b64,
-            filename: file.name,
-            contentType: file.type,
-            folder: `methods/${activeTab}`,
-          }),
-        });
-        const data = await res.json();
-        setFiles((prev) => ({
-          ...prev,
-          [activeTab]: [
-            ...prev[activeTab],
-            { name: file.name, url: data.url, size: formatSize(file.size) },
-          ],
-        }));
-        setUploading(false);
-      };
-      reader.readAsDataURL(file);
-    } catch {
-      setUploading(false);
-    }
+    const url = await uploadFile(file, `methods/${activeTab}`);
+    const size = formatSize(file.size);
+    const row = await apiCreate('methods_files', { tab: activeTab, name: file.name, url, size });
+    setFiles((prev) => [row, ...prev]);
+    setUploading(false);
     e.target.value = '';
   }
 
-  const currentFiles = files[activeTab] ?? [];
+  async function handleDelete(id: string) {
+    await apiDelete('methods_files', Number(id));
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+  }
+
+  const currentFiles = files.filter((f) => f.tab === activeTab);
 
   return (
     <section className="bg-gray-50 py-24 px-8 md:px-16">
@@ -92,9 +69,7 @@ export default function MethodsSection() {
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 'px-5 py-3 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap',
-                activeTab === tab.id
-                  ? 'border-black text-black'
-                  : 'border-transparent text-gray-400 hover:text-gray-700'
+                activeTab === tab.id ? 'border-black text-black' : 'border-transparent text-gray-400 hover:text-gray-700'
               )}
             >
               {tab.label}
@@ -110,8 +85,8 @@ export default function MethodsSection() {
             </div>
           )}
 
-          {currentFiles.map((f, i) => (
-            <div key={i} className="bg-white rounded-2xl shadow-sm px-6 py-4 flex items-center gap-4">
+          {currentFiles.map((f) => (
+            <div key={f.id} className="bg-white rounded-2xl shadow-sm px-6 py-4 flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
                 <Icon name={fileIcon(f.name)} size={20} className="text-gray-500" />
               </div>
@@ -119,14 +94,12 @@ export default function MethodsSection() {
                 <p className="text-gray-900 text-sm font-medium truncate">{f.name}</p>
                 <p className="text-gray-400 text-xs mt-0.5">{f.size}</p>
               </div>
-              <a
-                href={f.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 text-gray-400 hover:text-black transition-colors"
-              >
+              <a href={f.url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-gray-400 hover:text-black transition-colors">
                 <Icon name="Download" size={18} />
               </a>
+              <button onClick={() => handleDelete(f.id)} className="shrink-0 text-gray-300 hover:text-red-500 transition-colors">
+                <Icon name="X" size={16} />
+              </button>
             </div>
           ))}
 

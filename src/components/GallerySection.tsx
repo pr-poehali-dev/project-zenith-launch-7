@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Icon from '@/components/ui/icon';
+import { apiGet, apiCreate, apiDelete, uploadFile } from '@/lib/api';
 
-const UPLOAD_URL = 'https://functions.poehali.dev/b2489f59-4d00-4724-9a89-0168ecb48d3c';
-
-type Photo = { url: string; name: string };
+type Photo = { id: string; url: string; name: string };
 
 export default function GallerySection() {
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -11,34 +10,26 @@ export default function GallerySection() {
   const [lightbox, setLightbox] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    apiGet('gallery').then(setPhotos);
+  }, []);
+
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = Array.from(e.target.files ?? []);
     if (!fileList.length) return;
     setUploading(true);
     for (const file of fileList) {
-      await new Promise<void>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = async () => {
-          const b64 = (reader.result as string).split(',')[1];
-          const res = await fetch(UPLOAD_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              file: b64,
-              filename: file.name,
-              contentType: file.type,
-              folder: 'gallery',
-            }),
-          });
-          const data = await res.json();
-          setPhotos((prev) => [...prev, { url: data.url, name: file.name }]);
-          resolve();
-        };
-        reader.readAsDataURL(file);
-      });
+      const url = await uploadFile(file, 'gallery');
+      const row = await apiCreate('gallery', { url, name: file.name });
+      setPhotos((prev) => [row as Photo, ...prev]);
     }
     setUploading(false);
     e.target.value = '';
+  }
+
+  async function handleDelete(id: string) {
+    await apiDelete('gallery', Number(id));
+    setPhotos((prev) => prev.filter((p) => p.id !== id));
   }
 
   return (
@@ -71,20 +62,23 @@ export default function GallerySection() {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {photos.map((photo, i) => (
-              <div
-                key={i}
-                className="aspect-square overflow-hidden rounded-2xl cursor-pointer group relative"
-                onClick={() => setLightbox(photo.url)}
-              >
+            {photos.map((photo) => (
+              <div key={photo.id} className="aspect-square overflow-hidden rounded-2xl cursor-pointer group relative">
                 <img
                   src={photo.url}
                   alt={photo.name}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  onClick={() => setLightbox(photo.url)}
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                   <Icon name="ZoomIn" size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleDelete(photo.id); }}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Icon name="X" size={14} />
+                </button>
               </div>
             ))}
             <div
@@ -99,10 +93,7 @@ export default function GallerySection() {
       </div>
 
       {lightbox && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-          onClick={() => setLightbox(null)}
-        >
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
           <button className="absolute top-6 right-6 text-white/70 hover:text-white" onClick={() => setLightbox(null)}>
             <Icon name="X" size={28} />
           </button>

@@ -55,8 +55,8 @@ export default function HeroSection() {
             >
               <div className="relative h-48 w-48 overflow-hidden rounded-full border-4 border-white shadow-2xl md:h-64 md:w-64">
                 <img
-                  src="/placeholder-user.jpg"
-                  alt="Воспитатель"
+                  src="https://cdn.poehali.dev/projects/1da36ac5-d950-44d7-a995-81a6bc4f6234/bucket/e59df744-f8a9-4d05-87fc-f56111b7498b.jpg"
+                  alt="Олзоева Елена Борисовна"
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -76,7 +76,7 @@ export default function HeroSection() {
                   Воспитатель | Педагог дошкольного образования
                 </p>
                 <p className="text-base font-light text-white/60 md:text-lg max-w-lg pt-2">
-                  Создаю тёплую и безопасную среду, где каждый ребёнок раскрывает свой потенциал. Опыт работы — более 10 лет.
+                  Воспитатель, исследователь и немного волшебник — каждый день превращаю обычные занятия в увлекательные творческие приключения. Мой девиз: «Играем — познаём, творим — растём, чувствуем красоту — развиваемся!»
                 </p>
                 <div className="flex flex-wrap gap-6 pt-2">
                   <div className="flex items-center gap-8">

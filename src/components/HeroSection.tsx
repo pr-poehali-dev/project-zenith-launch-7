@@ -70,7 +70,7 @@ export default function HeroSection() {
             >
               <div className="space-y-4">
                 <p className="text-3xl font-light text-white md:text-4xl lg:text-5xl">
-                  Ваше имя
+                  Олзоева Елена Борисовна
                 </p>
                 <p className="text-xl font-light text-white/80 md:text-2xl">
                   Воспитатель | Педагог дошкольного образования
